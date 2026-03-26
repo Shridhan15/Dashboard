@@ -9,16 +9,16 @@ router = APIRouter()
 @router.post("/sync", response_model=List[Opportunity])
 async def sync_emails():
     raw_emails = fetch_unread_college_emails()
-    parsed_opportunities = []
+    results = []
     
-    for email_text in raw_emails:
-        # Pass each email to Groq via LangChain
-        extracted_data = parse_email_with_ai(email_text)
-        
-        # Only keep it if it's relevant to B.Tech CSE
-        if extracted_data.is_relevant:
-            parsed_opportunities.append(extracted_data)
+    for text in raw_emails:
+        try:
+            data = parse_email_with_ai(text)
+            # LAYER 2 & 3 FILTER: Only add if AI deems it relevant for CSE
+            if data.is_relevant:
+                results.append(data)
+        except Exception as e:
+            print(f"AI parsing error on an email: {e}")
+            continue
             
-    # In a real app, you would save parsed_opportunities to a database here
-    
-    return parsed_opportunities
+    return results

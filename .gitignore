@@ -1,2 +1,6 @@
 node_modules/
 venv
+.env
+__pycache__/
+credentials.json
+token.json
