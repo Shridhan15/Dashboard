@@ -2,6 +2,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from api.routes import router
 
+from database import engine
+from models import db_models
+db_models.Base.metadata.create_all(bind=engine)
+
 app = FastAPI(title="SyncMail API")
 
 # Allow React frontend to communicate with this backend
